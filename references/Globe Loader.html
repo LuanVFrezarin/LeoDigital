@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Globe Loader</title>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<style>
+  :root {
+    --bg: #f1ede4;
+    --ink: #1a1916;
+    --ink-soft: rgba(26, 25, 22, 0.55);
+    --ink-faint: rgba(26, 25, 22, 0.18);
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  .stage svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  /* Slight body breathing so the loader feels alive on a still page */
+  .stage::after {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <div class="stage" aria-label="Loading" role="status">
+    <!-- Whirl layer (orbiting arcs + dust) -->
+    <svg id="whirl" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+    <!-- Globe layer -->
+    <svg id="globe" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+  </div>
+
+<script>
+(async function () {
+  const INK = "#1a1916";
+  const INK_SOFT = "rgba(26,25,22,0.55)";
+  const INK_FAINT = "rgba(26,25,22,0.22)";
+  const R = 62; // globe radius within 200×200
+
+  /* ---------- Whirl layer ---------- */
+  const whirl = document.getElementById("whirl");
+
+  // soft outer aura ring
+  const aura = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  aura.setAttribute("r", R + 22);
+  aura.setAttribute("fill", "none");
+  aura.setAttribute("stroke", INK);
+  aura.setAttribute("stroke-opacity", "0.06");
+  aura.setAttribute("stroke-width", "1");
+  whirl.appendChild(aura);
+
+  // Three orbiting arc bands at different radii / tilts / speeds
+  const bands = [
+    { r: R + 10, dash: "2 6",  width: 1.1, dur: 2.6, dir: 1,  tilt: -18 },
+    { r: R + 18, dash: "1 10", width: 1,   dur: 4.2, dir: -1, tilt: 24  },
+    { r: R + 28, dash: "1 16", width: 0.9, dur: 6.8, dir: 1,  tilt: 6   },
+  ];
+
+  bands.forEach((b, i) => {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `rotate(${b.tilt})`);
+    // partial arc — open ring with a leading "comet" gap
+    const arc = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    arc.setAttribute("r", b.r);
+    arc.setAttribute("fill", "none");
+    arc.setAttribute("stroke", INK);
+    arc.setAttribute("stroke-opacity", i === 0 ? "0.55" : i === 1 ? "0.35" : "0.22");
+    arc.setAttribute("stroke-width", b.width);
+    arc.setAttribute("stroke-linecap", "round");
+    arc.setAttribute("stroke-dasharray", b.dash);
+    arc.setAttribute("pathLength", "100");
+
+    // animate dash offset to make dashes orbit
+    const anim = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+    anim.setAttribute("attributeName", "stroke-dashoffset");
+    anim.setAttribute("from", b.dir > 0 ? "0" : "100");
+    anim.setAttribute("to",   b.dir > 0 ? "-100" : "0");
+    anim.setAttribute("dur", b.dur + "s");
+    anim.setAttribute("repeatCount", "indefinite");
+    arc.appendChild(anim);
+
+    g.appendChild(arc);
+
+    // a single "comet" — a thin arc that sweeps the band
+    const cometWrap = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const cometAnim = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+    cometAnim.setAttribute("attributeName", "transform");
+    cometAnim.setAttribute("type", "rotate");
+    cometAnim.setAttribute("from", b.dir > 0 ? "0" : "360");
+    cometAnim.setAttribute("to",   b.dir > 0 ? "360" : "0");
+    cometAnim.setAttribute("dur", (b.dur * 1.6) + "s");
+    cometAnim.setAttribute("repeatCount", "indefinite");
+    cometWrap.appendChild(cometAnim);
+
+    const cometArcLen = i === 0 ? 26 : i === 1 ? 18 : 12;
+    const comet = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    comet.setAttribute("r", b.r);
+    comet.setAttribute("fill", "none");
+    comet.setAttribute("stroke", INK);
+    comet.setAttribute("stroke-opacity", "0.85");
+    comet.setAttribute("stroke-width", b.width + 0.4);
+    comet.setAttribute("stroke-linecap", "round");
+    comet.setAttribute("pathLength", "100");
+    comet.setAttribute("stroke-dasharray", `${cometArcLen} ${100 - cometArcLen}`);
+    cometWrap.appendChild(comet);
+
+    g.appendChild(cometWrap);
+    whirl.appendChild(g);
+  });
+
+  // Tiny orbiting dust specks
+  const dustSeeds = [
+    { r: R + 6,  size: 0.9, dur: 3.2, dir: 1,  phase: 0   },
+    { r: R + 14, size: 0.7, dur: 4.6, dir: -1, phase: 120 },
+    { r: R + 22, size: 0.6, dur: 5.4, dir: 1,  phase: 220 },
+    { r: R + 32, size: 0.5, dur: 7.2, dir: -1, phase: 60  },
+    { r: R + 36, size: 0.45,dur: 9.0, dir: 1,  phase: 300 },
+  ];
+  dustSeeds.forEach(d => {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const a = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+    a.setAttribute("attributeName", "transform");
+    a.setAttribute("type", "rotate");
+    const from = d.phase;
+    const to = d.phase + (d.dir > 0 ? 360 : -360);
+    a.setAttribute("from", from);
+    a.setAttribute("to", to);
+    a.setAttribute("dur", d.dur + "s");
+    a.setAttribute("repeatCount", "indefinite");
+    g.appendChild(a);
+
+    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot.setAttribute("cx", d.r);
+    dot.setAttribute("cy", 0);
+    dot.setAttribute("r", d.size);
+    dot.setAttribute("fill", INK);
+    dot.setAttribute("opacity", "0.55");
+    g.appendChild(dot);
+    whirl.appendChild(g);
+  });
+
+  /* ---------- Globe layer ---------- */
+  const globeSvg = document.getElementById("globe");
+
+  // Background sphere disc (very subtle)
+  const sphere = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  sphere.setAttribute("r", R);
+  sphere.setAttribute("fill", "#e9e3d5");
+  sphere.setAttribute("stroke", INK);
+  sphere.setAttribute("stroke-width", "1.2");
+  sphere.setAttribute("stroke-opacity", "0.9");
+  globeSvg.appendChild(sphere);
+
+  // Graticule + countries group (clipped to sphere)
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  const clip = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+  clip.setAttribute("id", "sphereClip");
+  const clipCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  clipCircle.setAttribute("r", R);
+  clip.appendChild(clipCircle);
+  defs.appendChild(clip);
+  globeSvg.appendChild(defs);
+
+  const inner = document.createElementNS("http://www.w3.org/2000/svg", "g");
+  inner.setAttribute("clip-path", "url(#sphereClip)");
+  globeSvg.appendChild(inner);
+
+  const graticulePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  graticulePath.setAttribute("fill", "none");
+  graticulePath.setAttribute("stroke", INK);
+  graticulePath.setAttribute("stroke-opacity", "0.18");
+  graticulePath.setAttribute("stroke-width", "0.5");
+  inner.appendChild(graticulePath);
+
+  const landPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  landPath.setAttribute("fill", INK);
+  landPath.setAttribute("fill-opacity", "0.92");
+  landPath.setAttribute("stroke", INK);
+  landPath.setAttribute("stroke-width", "0.3");
+  landPath.setAttribute("stroke-linejoin", "round");
+  inner.appendChild(landPath);
+
+  const bordersPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  bordersPath.setAttribute("fill", "none");
+  bordersPath.setAttribute("stroke", "#f1ede4");
+  bordersPath.setAttribute("stroke-opacity", "0.55");
+  bordersPath.setAttribute("stroke-width", "0.35");
+  bordersPath.setAttribute("stroke-linejoin", "round");
+  inner.appendChild(bordersPath);
+
+  // Crisp rim on top
+  const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  rim.setAttribute("r", R);
+  rim.setAttribute("fill", "none");
+  rim.setAttribute("stroke", INK);
+  rim.setAttribute("stroke-width", "1.2");
+  globeSvg.appendChild(rim);
+
+  // Subtle terminator (limb shadow) — a thin inner ring darker on one side
+  const shade = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  shade.setAttribute("r", R - 1);
+  shade.setAttribute("fill", "none");
+  shade.setAttribute("stroke", INK);
+  shade.setAttribute("stroke-opacity", "0.08");
+  shade.setAttribute("stroke-width", "4");
+  globeSvg.appendChild(shade);
+
+  // Projection
+  const projection = d3.geoOrthographic()
+    .scale(R)
+    .translate([0, 0])
+    .clipAngle(90)
+    .rotate([0, -15, 0]);
+  const pathGen = d3.geoPath(projection);
+
+  // Load world topojson
+  let world;
+  try {
+    const res = await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json");
+    world = await res.json();
+  } catch (e) {
+    console.error("Failed to load world atlas", e);
+    return;
+  }
+
+  const land = topojson.feature(world, world.objects.countries);
+  const borders = topojson.mesh(world, world.objects.countries, (a, b) => a !== b);
+  const graticule = d3.geoGraticule10();
+
+  // Render once + on each frame update rotation
+  let lambda = 0; // longitude rotation
+  const tilt = -18; // fixed slight axial tilt
+  const phi = -15;
+
+  function render() {
+    projection.rotate([lambda, phi, tilt]);
+    graticulePath.setAttribute("d", pathGen(graticule) || "");
+    landPath.setAttribute("d", pathGen(land) || "");
+    bordersPath.setAttribute("d", pathGen(borders) || "");
+  }
+
+  // Spin loop: ~24s per revolution (calm, loader-appropriate)
+  const SPIN_MS_PER_REV = 18000;
+  let last = performance.now();
+  function tick(now) {
+    const dt = now - last;
+    last = now;
+    lambda = (lambda + (360 * dt) / SPIN_MS_PER_REV) % 360;
+    render();
+    requestAnimationFrame(tick);
+  }
+  render();
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
