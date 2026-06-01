@@ -10,7 +10,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -53,7 +53,7 @@
     body {
       background: var(--bg-0);
       color: var(--t1);
-      font-family: 'Manrope', sans-serif;
+      font-family: 'Outfit', sans-serif;
       overflow-x: hidden;
       padding-top: var(--bh);
     }
@@ -73,7 +73,8 @@
     ::-webkit-scrollbar-track { background: var(--bg-0); }
     ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
 
-    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.05; }
+    h1,h2,h3,h4 { font-family: 'Poppins', sans-serif; line-height: 1.05; }
+    p, .sec-desc, .svc-txt, .step-txt, .t-txt, .hero-sub, .drop-text, .builder-side p, .hero-panel p { font-family: 'Inter', sans-serif; }
     .grad-text {
       background: var(--grad);
       -webkit-background-clip: text;
@@ -127,7 +128,7 @@
       border-bottom-color: var(--border);
     }
     .nav-logo {
-      font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800;
+      font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800;
       color: var(--t1); text-decoration: none;
       display: flex; align-items: center; gap: 10px;
       letter-spacing: 0.08em;
@@ -182,7 +183,7 @@
       width: 34px; height: 34px; border-radius: 8px;
       background: var(--grad);
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 800; font-family: 'Syne',sans-serif;
+      font-size: 18px; font-weight: 800; font-family: 'Poppins',sans-serif;
     }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s; }
@@ -219,7 +220,7 @@
     }
     #mobileMenu.open { display: flex; }
     #mobileMenu a {
-      font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800;
+      font-family: 'Poppins', sans-serif; font-size: 30px; font-weight: 800;
       color: var(--t1); text-decoration: none;
     }
     #mobileMenu .mm-wa { color: #25d366 !important; }
@@ -228,7 +229,7 @@
     #hero {
       position: relative; height: 100vh;
       overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: flex-start; justify-content: center;
     }
     @media(max-width:900px) {
       #hero {
@@ -238,25 +239,31 @@
       }
     }
     #heroBg {
-      position: absolute; inset: -5%;
-      background: url('image1.png') center 52% / cover no-repeat;
-      transform-origin: center 70%;
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #0a0e1f 0%, #111930 40%, #0d1427 70%, #080c1a 100%);
       will-change: transform;
-      filter: saturate(1.05) contrast(1.02);
     }
     @media(max-width:900px) {
       #heroBg {
         inset: 0;
       }
     }
+    #particleCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
     .hero-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(
         to bottom,
-        rgba(8,10,22,0.52) 0%,
-        rgba(8,10,22,0.28) 38%,
-        rgba(8,10,22,0.55) 72%,
-        rgba(8,10,22,0.88) 100%
+        rgba(8,10,22,0.15) 0%,
+        rgba(8,10,22,0.05) 38%,
+        rgba(8,10,22,0.35) 72%,
+        rgba(8,10,22,0.82) 100%
       );
     }
     /* Subtle vignette sides */
@@ -292,12 +299,14 @@
       gap: 32px;
       align-items: end;
       opacity: 0; transform: translateY(60px);
+      margin-top: calc(var(--bh) + 68px + 6vh);
     }
     @media(max-width:900px) {
       #heroContent {
         grid-template-columns: 1fr;
         gap: 20px;
-        padding: 210px 20px 40px;
+        padding: 105px 20px 40px;
+        margin-top: 0;
       }
     }
     .hero-copy {
@@ -550,7 +559,7 @@
       opacity: 0.7;
     }
     .drop-title {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Poppins', sans-serif;
       font-size: clamp(42px, 8vw, 110px);
       line-height: 0.95;
       font-weight: 800;
@@ -661,7 +670,7 @@
       backdrop-filter: blur(8px);
     }
     .stat-num {
-      font-family: 'Syne', sans-serif; font-size: 44px; font-weight: 800; line-height: 1;
+      font-family: 'Poppins', sans-serif; font-size: 44px; font-weight: 800; line-height: 1;
       background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .stat-lbl { font-size: 13px; color: var(--t2); margin-top: 6px; }
@@ -763,7 +772,7 @@
     .step-num {
       width: 64px; height: 64px; border-radius: 50%;
       background: var(--grad); display: flex; align-items: center; justify-content: center;
-      font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
+      font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 800;
       margin: 0 0 18px; box-shadow: var(--glow-b);
     }
     .step-name { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
@@ -931,7 +940,7 @@
     @media(max-width:580px){ .builder-body { padding: 22px; } .builder-header { padding: 22px; } }
     .b-step { display: none; }
     .b-step.active { display: block; animation: builderStepIn .42s ease; }
-    .b-q { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .b-q { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 6px; }
     .b-hint { font-size: 13px; color: var(--t3); margin-bottom: 26px; }
     .opt-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap: 12px; margin-bottom: 28px; }
     .opt-card {
@@ -1247,7 +1256,7 @@
     }
     .est-lbl { font-size: 11px; color: var(--t3); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 8px; }
     .est-val {
-      font-family: 'Syne',sans-serif; font-size: 34px; font-weight: 800;
+      font-family: 'Poppins',sans-serif; font-size: 34px; font-weight: 800;
       background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .est-note { font-size: 11px; color: var(--t3); margin-top: 6px; }
@@ -1337,7 +1346,7 @@
     .p-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
     .p-desc { font-size: 14px; color: var(--t2); line-height: 1.6; margin-bottom: 22px; }
     .p-from { font-size: 12px; color: var(--t3); }
-    .p-price { font-family: 'Syne',sans-serif; font-size: 36px; font-weight: 800; margin-bottom: 4px; }
+    .p-price { font-family: 'Poppins',sans-serif; font-size: 36px; font-weight: 800; margin-bottom: 4px; }
     .p-period { font-size: 13px; color: var(--t3); margin-bottom: 22px; }
     .p-feats { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px; }
     .p-feats li { font-size: 13px; color: var(--t2); display: flex; align-items: center; gap: 9px; }
@@ -1583,6 +1592,7 @@
 <!-- ===== HERO ===== -->
 <section id="hero">
   <div id="heroBg"></div>
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-vignette"></div>
 
@@ -1756,37 +1766,37 @@
       <div class="svc-icon">🌐</div>
       <div class="svc-name">Sites & Landing Pages</div>
       <p class="svc-txt">Presença digital enxuta ou comercial pesada, com performance, copy e estrutura para vender.</p>
-      <span class="svc-tag">→ A partir de R$ 1.500</span>
+      <span class="svc-tag">Sites & Landing Pages</span>
     </div>
     <div class="svc-card">
       <div class="svc-icon">🛒</div>
       <div class="svc-name">E-commerce</div>
       <p class="svc-txt">Lojas com vitrine forte, checkout claro e experiência visual muito acima do padrão de plataforma pronta.</p>
-      <span class="svc-tag">→ A partir de R$ 4.500</span>
+      <span class="svc-tag">E-commerce</span>
     </div>
     <div class="svc-card">
       <div class="svc-icon">⚙️</div>
       <div class="svc-name">Sistemas Web</div>
       <p class="svc-txt">CRMs, ERPs, áreas operacionais e automações que tiram sua empresa do improviso e colocam processo.</p>
-      <span class="svc-tag">→ A partir de R$ 8.000</span>
+      <span class="svc-tag">Sistemas Web</span>
     </div>
     <div class="svc-card">
       <div class="svc-icon">📱</div>
       <div class="svc-name">Aplicativos Mobile</div>
       <p class="svc-txt">Apps iOS e Android com fluxo limpo, onboarding bem resolvido e visual de produto sério.</p>
-      <span class="svc-tag">→ A partir de R$ 12.000</span>
+      <span class="svc-tag">Aplicativos Mobile</span>
     </div>
     <div class="svc-card">
       <div class="svc-icon">🎨</div>
       <div class="svc-name">UI/UX Design</div>
       <p class="svc-txt">Estrutura visual, protótipo e sistema de interface para sua marca parecer coesa e premium.</p>
-      <span class="svc-tag">→ A partir de R$ 2.000</span>
+      <span class="svc-tag">UI/UX Design</span>
     </div>
     <div class="svc-card">
       <div class="svc-icon">🔒</div>
       <div class="svc-name">Manutenção & Suporte</div>
       <p class="svc-txt">Atualização, suporte e evolução contínua para o projeto não morrer depois da entrega.</p>
-      <span class="svc-tag">→ Planos mensais disponíveis</span>
+      <span class="svc-tag">Manutenção & Suporte</span>
     </div>
   </div>
 </section>
@@ -1940,9 +1950,9 @@
             <div id="summaryRows"></div>
           </div>
           <div class="est-banner">
-            <div class="est-lbl">Estimativa de investimento</div>
-            <div class="est-val" id="estVal">R$ 0</div>
-            <div class="est-note">* Estimativa prévia. A proposta final é personalizada conforme seus detalhes.</div>
+            <div class="est-lbl">Investimento</div>
+            <div class="est-val" id="estVal">Sob consulta</div>
+            <div class="est-note">* Valor final é personalizado conforme escopo e prazo.</div>
           </div>
           <button class="btn-wa-send" id="sendBtn">
             <svg viewBox="0 0 24 24" width="22" height="22" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -1969,9 +1979,6 @@
       <div class="p-icon">⚡</div>
       <div class="p-name">Starter</div>
       <p class="p-desc">Para negócios que precisam sair do improviso e colocar uma presença profissional no ar rapidamente.</p>
-      <div class="p-from">A partir de</div>
-      <div class="p-price">R$ 1.500</div>
-      <div class="p-period">pagamento único</div>
       <ul class="p-feats">
         <li>Landing Page ou Site Simples</li>
         <li>Design responsivo (mobile-first)</li>
@@ -1987,9 +1994,6 @@
       <div class="p-icon">🚀</div>
       <div class="p-name">Pro</div>
       <p class="p-desc">Para empresas que querem parecer maiores, converter mais e criar uma operação digital mais madura.</p>
-      <div class="p-from">A partir de</div>
-      <div class="p-price">R$ 4.500</div>
-      <div class="p-period">pagamento único</div>
       <ul class="p-feats">
         <li>Site completo ou E-commerce</li>
         <li>Design premium customizado</li>
@@ -2005,9 +2009,6 @@
       <div class="p-icon">🏆</div>
       <div class="p-name">Enterprise</div>
       <p class="p-desc">Para operações que precisam de sistema, app, integrações e uma entrega realmente sob medida.</p>
-      <div class="p-from">Sob consulta</div>
-      <div class="p-price">Personalizado</div>
-      <div class="p-period">proposta customizada</div>
       <ul class="p-feats">
         <li>Sistemas & Apps completos</li>
         <li>Arquitetura escalável</li>
@@ -2503,19 +2504,6 @@ function scrollToBuilder() {
   document.querySelector('.builder-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-function getEstimate() {
-  const base = {
-    'Landing Page': [1500, 3500], 'Site Institucional': [2500, 6000],
-    'E-commerce': [5000, 15000], 'Sistema Web': [8000, 30000],
-    'Aplicativo Mobile': [12000, 40000], 'Outro': [2000, 10000],
-  };
-  let [mn, mx] = base[bData.type] || [2000, 10000];
-  const n = document.querySelectorAll('.chk.sel').length;
-  mn += n * 350; mx += n * 900;
-  if (bData.dl === 'Urgente (até 7 dias)') { mn = Math.round(mn * 1.3); mx = Math.round(mx * 1.3); }
-  return `R$ ${(Math.round(mn/100)*100).toLocaleString('pt-BR')} – R$ ${(Math.round(mx/100)*100).toLocaleString('pt-BR')}`;
-}
-
 function bFinish() {
   bData.name  = document.getElementById('bName').value.trim()  || 'Visitante';
   bData.phone = document.getElementById('bPhone').value.trim() || '';
@@ -2530,8 +2518,7 @@ function bFinish() {
   document.getElementById('summaryRows').innerHTML = rows.map(([k,v]) =>
     `<div class="s-row"><span>${k}</span><span>${v}</span></div>`
   ).join('');
-  const est = getEstimate();
-  document.getElementById('estVal').textContent = est;
+  document.getElementById('estVal').textContent = 'Sob consulta';
   document.getElementById('sendBtn').onclick = () => {
     const feats = bData.feats.length ? bData.feats.join(', ') : 'Nenhuma';
     const msg = encodeURIComponent(
@@ -2541,7 +2528,7 @@ function bFinish() {
       `🏢 *Segmento:* ${bData.seg}\n` +
       `⚙️ *Funcionalidades:* ${feats}\n` +
       `⏱️ *Prazo:* ${bData.dl}\n\n` +
-      `💰 *Estimativa:* ${est}\n\n` +
+      `💰 *Investimento:* Sob consulta\n\n` +
       `Aguardo a proposta!`
     );
     window.open(`https://wa.me/5511962201120?text=${msg}`, '_blank', 'noopener,noreferrer');
@@ -2558,6 +2545,88 @@ function bReset() {
   bUpdateUI();
   document.getElementById('builder').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+/* ===== PISCA-PISCA PARTICLES ===== */
+(function () {
+  const canvas = document.getElementById('particleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const COLORS = [
+    '#ff4d6d','#ff7849','#ffca3a','#06d6a0',
+    '#4cc9f0','#7b5ea7','#f72585','#4361ee',
+    '#ffd166','#a8dadc','#80ffdb','#ff9f1c'
+  ];
+
+  let particles = [];
+  let raf;
+
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
+  function makeParticle(randomY) {
+    return {
+      x:      Math.random() * canvas.width,
+      y:      randomY ? Math.random() * canvas.height : -(Math.random() * 120 + 10),
+      r:      Math.random() * 4 + 2,
+      color:  COLORS[Math.floor(Math.random() * COLORS.length)],
+      vy:     Math.random() * 0.9 + 0.3,
+      vx:     (Math.random() - 0.5) * 0.35,
+      phase:  Math.random() * Math.PI * 2,
+      twinkle:Math.random() * 0.035 + 0.008,
+      glow:   Math.random() * 9 + 5,
+      alpha:  0
+    };
+  }
+
+  function init() {
+    resize();
+    particles = [];
+    const count = Math.max(60, Math.floor(canvas.width / 12));
+    for (let i = 0; i < count; i++) particles.push(makeParticle(true));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0, len = particles.length; i < len; i++) {
+      const p = particles[i];
+      p.y     += p.vy;
+      p.x     += p.vx;
+      p.phase += p.twinkle;
+      p.alpha  = 0.35 + Math.sin(p.phase) * 0.5;
+      if (p.alpha < 0) p.alpha = 0;
+
+      if (p.y > canvas.height + 20) {
+        particles[i] = makeParticle(false);
+        continue;
+      }
+
+      ctx.save();
+      ctx.globalAlpha  = p.alpha;
+      ctx.shadowBlur   = p.glow;
+      ctx.shadowColor  = p.color;
+      ctx.fillStyle    = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      /* small bright core */
+      ctx.globalAlpha  = p.alpha * 0.7;
+      ctx.shadowBlur   = 0;
+      ctx.fillStyle    = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    raf = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { cancelAnimationFrame(raf); init(); draw(); });
+  init();
+  draw();
+})();
 </script>
 </body>
 </html>
